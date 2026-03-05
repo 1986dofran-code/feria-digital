@@ -1,0 +1,101 @@
+﻿/<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feria Digital – El Progreso</title>
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Feria Digital – El Progreso</h1>
+    <p>Espacio virtual para mostrar los productos agrícolas y logros educativos de nuestra comunidad.</p>
+</header>
+
+<nav>
+<ul>
+<li><a href="#productos">Cultivos / Productos</a></li>
+<li><a href="#galeria">Galería de fotos</a></li>
+<li><a href="#logros">Logros escolares</a></li>
+<li><a href="#contacto">Contacto</a></li>
+</ul>
+</nav>
+
+<main>
+
+<section id="productos">
+<h2>Cultivos / Productos</h2>
+
+<article>
+<h3>Café Orgánico</h3>
+<p>Cultivado por familias campesinas de la vereda.</p>
+<button onclick="verMas('cafe')">Ver más</button>
+<p id="cafe" class="oculto">
+Producción artesanal, secado natural y comercialización local.
+</p>
+</article>
+
+<article>
+<h3>Maíz Criollo</h3>
+<p>Base alimentaria tradicional de la región.</p>
+<button onclick="verMas('maiz')">Ver más</button>
+<p id="maiz" class="oculto">
+Sembrado sin químicos y utilizado en arepas y productos típicos.
+</p>
+</article>
+
+</section>
+
+<section id="galeria">
+<h2>Galería de fotos</h2>
+
+<div class="galeria">
+<img src="https://via.placeholder.com/200">
+<img src="https://via.placeholder.com/200">
+<img src="https://via.placeholder.com/200">
+<img src="https://via.placeholder.com/200">
+</div>
+</section>
+
+<section id="logros">
+<h2>Logros escolares</h2>
+<p>Los estudiantes han desarrollado proyectos tecnológicos y agrícolas.</p>
+
+<ul>
+<li>Participación en feria científica rural.</li>
+<li>Creación del primer sitio web comunitario.</li>
+</ul>
+</section>
+
+<section id="contacto">
+<h2>Contacto</h2>
+
+<form id="formulario">
+<label>Nombre</label>
+<input type="text" id="nombre">
+
+<label>Celular</label>
+<input type="text" id="celular">
+
+<label>Mensaje</label>
+<textarea id="mensaje"></textarea>
+
+<button type="submit">Enviar</button>
+
+<p id="respuesta"></p>
+</form>
+
+</section>
+
+</main>
+
+<footer>
+<p>Feria Digital El Progreso © 2026</p>
+</footer>
+
+<script src="js/funciones.js"></script>
+
+</body>
+</html>
