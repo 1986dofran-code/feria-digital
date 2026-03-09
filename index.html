@@ -1,23 +1,28 @@
 ﻿/<!DOCTYPE html>
 <html lang="es">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Feria Digital – El Progreso</title>
+
+<meta name="description" content="Feria Digital de la vereda El Progreso. Espacio para conocer los productos agrícolas y logros educativos de la comunidad.">
+
 <link rel="stylesheet" href="css/estilos.css">
 </head>
 
 <body>
 
 <header>
-    <h1>Feria Digital – El Progreso</h1>
-    <p>Espacio virtual para mostrar los productos agrícolas y logros educativos de nuestra comunidad.</p>
+<h1>Feria Digital – El Progreso</h1>
+<p>Un espacio virtual para mostrar los productos agrícolas y los logros educativos de nuestra comunidad rural.</p>
 </header>
 
 <nav>
 <ul>
-<li><a href="#productos">Cultivos / Productos</a></li>
-<li><a href="#galeria">Galería de fotos</a></li>
+<li><a href="#productos">Productos</a></li>
+<li><a href="#galeria">Galería</a></li>
 <li><a href="#logros">Logros escolares</a></li>
 <li><a href="#contacto">Contacto</a></li>
 </ul>
@@ -26,65 +31,75 @@
 <main>
 
 <section id="productos">
-<h2>Cultivos / Productos</h2>
+<h2>Productos agrícolas</h2>
+<p>En esta sección se presentan algunos de los cultivos que producen las familias campesinas de la vereda.</p>
 
 <article>
-<h3>Café Orgánico</h3>
-<p>Cultivado por familias campesinas de la vereda.</p>
-<button onclick="verMas('cafe')">Ver más</button>
+<h3>Café orgánico</h3>
+<p>Café cultivado de manera tradicional por familias campesinas.</p>
+
+<button onclick="verMas('cafe')">Ver más información</button>
+
 <p id="cafe" class="oculto">
-Producción artesanal, secado natural y comercialización local.
+Este café se produce mediante procesos artesanales, con secado natural y cuidado ambiental.
 </p>
 </article>
 
 <article>
-<h3>Maíz Criollo</h3>
-<p>Base alimentaria tradicional de la región.</p>
-<button onclick="verMas('maiz')">Ver más</button>
+<h3>Maíz criollo</h3>
+<p>Producto tradicional utilizado en la alimentación local.</p>
+
+<button onclick="verMas('maiz')">Ver más información</button>
+
 <p id="maiz" class="oculto">
-Sembrado sin químicos y utilizado en arepas y productos típicos.
+El maíz criollo se cultiva sin químicos y es utilizado para la preparación de arepas y otros alimentos típicos.
 </p>
 </article>
 
 </section>
 
 <section id="galeria">
-<h2>Galería de fotos</h2>
+<h2>Galería de la comunidad</h2>
+<p>Algunas imágenes representativas de los cultivos y actividades de la vereda.</p>
 
-<div class="galeria">
-<img src="https://via.placeholder.com/200">
-<img src="https://via.placeholder.com/200">
-<img src="https://via.placeholder.com/200">
-<img src="https://via.placeholder.com/200">
-</div>
+<img src="imagen/descarga.jpg" alt="Cultivos de la vereda El Progreso" width="400">
+
+
 </section>
 
 <section id="logros">
 <h2>Logros escolares</h2>
-<p>Los estudiantes han desarrollado proyectos tecnológicos y agrícolas.</p>
+
+<p>Los estudiantes de la institución han desarrollado proyectos relacionados con tecnología y agricultura.</p>
 
 <ul>
-<li>Participación en feria científica rural.</li>
-<li>Creación del primer sitio web comunitario.</li>
+<li>Participación en la feria científica rural.</li>
+<li>Desarrollo del primer sitio web comunitario.</li>
+<li>Proyectos educativos sobre agricultura sostenible.</li>
 </ul>
+
 </section>
 
 <section id="contacto">
 <h2>Contacto</h2>
 
+<p>Si desea comunicarse con la comunidad o conocer más sobre nuestros productos, puede enviar un mensaje.</p>
+
 <form id="formulario">
-<label>Nombre</label>
-<input type="text" id="nombre">
 
-<label>Celular</label>
-<input type="text" id="celular">
+<label for="nombre">Nombre</label>
+<input type="text" id="nombre" placeholder="Ingrese su nombre" required>
 
-<label>Mensaje</label>
-<textarea id="mensaje"></textarea>
+<label for="celular">Celular</label>
+<input type="tel" id="celular" placeholder="Ingrese su número de celular" required>
 
-<button type="submit">Enviar</button>
+<label for="mensaje">Mensaje</label>
+<textarea id="mensaje" rows="4" placeholder="Escriba su mensaje" required></textarea>
+
+<button type="submit">Enviar mensaje</button>
 
 <p id="respuesta"></p>
+
 </form>
 
 </section>
@@ -92,7 +107,8 @@ Sembrado sin químicos y utilizado en arepas y productos típicos.
 </main>
 
 <footer>
-<p>Feria Digital El Progreso © 2026</p>
+<p>Feria Digital de la Vereda El Progreso © 2026</p>
+<p>Sitio desarrollado como proyecto educativo comunitario.</p>
 </footer>
 
 <script src="js/funciones.js"></script>
