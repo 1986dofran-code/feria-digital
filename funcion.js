@@ -1,51 +1,76 @@
-// MOSTRAR U OCULTAR INFORMACIÓN
-function verMas(id){
+/**
+ * Configuración de selectores para evitar repeticiones
+ */
+const SELECTORES = {
+  formulario: "formulario",
+  respuesta: "respuesta",
+  inputs: {
+    nombre: "nombre",
+    celular: "celular",
+    mensaje: "mensaje"
+  }
+};
 
-const elemento = document.getElementById(id);
+/**
+ * Muestra u oculta un elemento alternando su visibilidad.
+ * @param {string} id - El ID del elemento a manipular.
+ */
+const toggleInfo = (id) => {
+  const elemento = document.getElementById(id);
+  if (!elemento) return;
 
-if(elemento.style.display === "block"){
-elemento.style.display = "none";
-console.log("Información oculta");
-}else{
-elemento.style.display = "block";
-console.log("Información mostrada");
-}
+  const estaVisible = elemento.style.display === "block";
+  elemento.style.display = estaVisible ? "none" : "block";
+  
+  console.log(`Información ${estaVisible ? "oculta" : "mostrada"}`);
+};
 
-}
+/**
+ * Lógica de validación de formulario
+ */
+const handleFormSubmit = (e) => {
+  e.preventDefault();
 
+  // Referencias a los elementos
+  const form = e.target;
+  const respuesta = document.getElementById(SELECTORES.respuesta);
+  
+  // Obtención de valores
+  const values = {
+    nombre: form[SELECTORES.inputs.nombre].value.trim(),
+    celular: form[SELECTORES.inputs.celular].value.trim(),
+    mensaje: form[SELECTORES.inputs.mensaje].value.trim()
+  };
 
-// VALIDACIÓN FORMULARIO
-document.getElementById("formulario")
-.addEventListener("submit", function(e){
+  // Validaciones (Estrategia de cláusulas de guarda)
+  if (!values.nombre) {
+    updateResponse(respuesta, "El nombre es obligatorio", "red");
+    return;
+  }
 
-e.preventDefault();
+  if (!/^\d{10}$/.test(values.celular)) {
+    updateResponse(respuesta, "El celular debe tener 10 dígitos", "red");
+    return;
+  }
 
-let nombre = document.getElementById("nombre").value.trim();
-let celular = document.getElementById("celular").value.trim();
-let mensaje = document.getElementById("mensaje").value.trim();
-let respuesta = document.getElementById("respuesta");
+  if (values.mensaje.length < 10) {
+    updateResponse(respuesta, "Mensaje mínimo 10 caracteres", "red");
+    return;
+  }
 
-console.log("Evento enviar ejecutado");
+  // Éxito
+  updateResponse(respuesta, "Mensaje enviado correctamente ✅", "green");
+  form.reset(); // Opcional: limpia el formulario al terminar
+};
 
-if(nombre === ""){
-respuesta.textContent="El nombre es obligatorio";
-console.log("Error: nombre vacío");
-return;
-}
+/**
+ * Función auxiliar para actualizar el mensaje de respuesta
+ */
+const updateResponse = (elemento, mensaje, color) => {
+  elemento.textContent = mensaje;
+  elemento.style.color = color;
+  console.log(`Validación: ${mensaje}`);
+};
 
-if(!/^\d{10}$/.test(celular)){
-respuesta.textContent="El celular debe tener 10 dígitos";
-console.log("Error: celular incorrecto");
-return;
-}
-
-if(mensaje.length < 10){
-respuesta.textContent="Mensaje mínimo 10 caracteres";
-console.log("Error: mensaje corto");
-return;
-}
-
-respuesta.textContent="Mensaje enviado correctamente ✅";
-console.log("Validación exitosa");
-
-});
+// --- Inicialización de Eventos ---
+document.getElementById(SELECTORES.formulario)?.addEventListener("submit", handleFormSubmit);
