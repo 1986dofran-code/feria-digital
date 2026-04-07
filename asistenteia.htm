@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asistente IA - Feria Digital</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilo.css">
+
+  <style>
+    .chat-section {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .chat-shell {
+      background: #ffffff;
+      border-radius: 28px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      border: 1px solid rgba(0, 128, 0, 0.08);
+    }
+
+    .chat-topbar {
+      background: linear-gradient(135deg, #0c8f1b, #0a7416);
+      color: #ffffff;
+      padding: 1.4rem 1.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .chat-topbar h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .chat-topbar p {
+      margin: 0.35rem 0 0;
+      opacity: 0.92;
+      font-size: 0.95rem;
+    }
+
+    .chat-status {
+      background: rgba(255, 255, 255, 0.16);
+      padding: 0.6rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .chat-body {
+      display: flex;
+      flex-direction: column;
+      min-height: 520px;
+      background: linear-gradient(to bottom, #fcfcfb, #f6f4ee);
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .message-row {
+      display: flex;
+      width: 100%;
+    }
+
+    .message-row.user {
+      justify-content: flex-end;
+    }
+
+    .message-row.bot {
+      justify-content: flex-start;
+    }
+
+    .message-bubble {
+      max-width: 78%;
+      padding: 0.95rem 1rem;
+      border-radius: 18px;
+      line-height: 1.6;
+      font-size: 0.98rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+
+    .message-row.bot .message-bubble {
+      background: #ffffff;
+      color: #2f2f2f;
+      border-top-left-radius: 6px;
+    }
+
+    .message-row.user .message-bubble {
+      background: #0c8f1b;
+      color: #ffffff;
+      border-top-right-radius: 6px;
+    }
+
+    .message-bubble.assistant-bubble {
+      white-space: normal;
+    }
+
+    .assistant-content {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .assistant-content p {
+      margin: 0;
+    }
+
+    .assistant-content > p {
+      line-height: 1.65;
+    }
+
+    .recipe-card {
+      gap: 1rem;
+    }
+
+    .recipe-title {
+      margin: 0;
+      color: var(--earth);
+      font-family: "Playfair Display", serif;
+      font-size: 1.45rem;
+      line-height: 1.15;
+    }
+
+    .recipe-intro {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .recipe-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .recipe-meta-item {
+      padding: 0.85rem 0.95rem;
+      border-radius: 14px;
+      background: rgba(15, 122, 15, 0.06);
+      border: 1px solid rgba(15, 122, 15, 0.12);
+    }
+
+    .recipe-meta-label {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: var(--primary-dark);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .recipe-meta-value {
+      display: block;
+      color: var(--text);
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .recipe-section {
+      display: grid;
+      gap: 0.65rem;
+      padding-top: 0.25rem;
+    }
+
+    .recipe-section h4 {
+      margin: 0;
+      color: var(--earth);
+      font-size: 0.98rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .recipe-list {
+      margin: 0;
+      padding-left: 1.15rem;
+      display: grid;
+      gap: 0.5rem;
+      line-height: 1.55;
+    }
+
+    .recipe-list li::marker {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .recipe-plain {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .recipe-plain p {
+      line-height: 1.65;
+    }
+
+    .quick-actions {
+      padding: 0 1.5rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+    }
+
+    .quick-btn {
+      border: 1px solid rgba(12, 143, 27, 0.18);
+      background: #ffffff;
+      color: #0b7e18;
+      padding: 0.72rem 1rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .quick-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(12, 143, 27, 0.1);
+      background: #f4fff5;
+    }
+
+    .chat-input-area {
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      background: #ffffff;
+      padding: 1rem 1.2rem 1.2rem;
+    }
+
+    .chat-form {
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-end;
+    }
+
+    .chat-input-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .chat-label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #5b5b5b;
+    }
+
+    .chat-textarea {
+      width: 100%;
+      min-height: 58px;
+      max-height: 140px;
+      resize: vertical;
+      border: 1px solid #d8dfd5;
+      border-radius: 18px;
+      padding: 0.95rem 1rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.98rem;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .chat-textarea:focus {
+      border-color: #0c8f1b;
+      box-shadow: 0 0 0 4px rgba(12, 143, 27, 0.08);
+    }
+
+    .chat-buttons {
+      display: flex;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+
+    .chat-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.9rem 1.2rem;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .chat-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .chat-btn.send {
+      background: #0c8f1b;
+      color: #ffffff;
+      box-shadow: 0 10px 20px rgba(12, 143, 27, 0.18);
+    }
+
+    .chat-btn.clear {
+      background: #f3f3f3;
+      color: #333333;
+    }
+
+    .chat-hint {
+      margin-top: 0.75rem;
+      font-size: 0.86rem;
+      color: #777777;
+    }
+
+    .typing {
+      display: inline-flex;
+      gap: 0.35rem;
+      align-items: center;
+    }
+
+    .typing span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #8ab691;
+      display: inline-block;
+      animation: blink 1.2s infinite;
+    }
+
+    .typing span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes blink {
+      0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.4;
+      }
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .chat-body {
+        min-height: 560px;
+      }
+
+      .message-bubble {
+        max-width: 92%;
+      }
+
+      .chat-form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .chat-buttons {
+        width: 100%;
+      }
+
+      .chat-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="main-header" id="top">
+    <div class="container">
+      <p class="eyebrow">Vereda El Progreso</p>
+      <h1>Asistente IA</h1>
+      <p>Consulta información de la Feria Digital conectada con Firebase AI Logic.</p>
+    </div>
+  </header>
+
+  <nav class="main-nav" aria-label="Navegación principal">
+    <div class="container nav-bar">
+      <a class="brand" href="index.html">Feria Digital</a>
+
+      <ul class="nav-list">
+        <li><a class="nav-link" href="index.html#productos">Productos</a></li>
+        <li><a class="nav-link" href="index.html#galeria">Galería</a></li>
+        <li><a class="nav-link" href="index.html#logros">Logros Escolares</a></li>
+        <li><a class="nav-link" href="index.html#contacto">Contacto</a></li>
+      </ul>
+
+      <div style="display: flex; gap: 0.9rem; align-items: center;">
+        <a href="index.html" class="btn btn-secondary">Volver al inicio</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="container-section chat-section" aria-labelledby="ia-chat-title">
+      <div class="section-head">
+        <h2 id="ia-chat-title">Chat del Asistente IA</h2>
+        <p>
+          Ya puedes escribir y enviar mensajes. Esta versión consulta Gemini desde Firebase AI Logic.
+        </p>
+      </div>
+
+      <div class="chat-shell">
+        <div class="chat-topbar">
+          <div>
+            <h3>Asistente virtual de la Feria Digital</h3>
+            <p>Integrado con Firebase AI Logic</p>
+          </div>
+          <div class="chat-status" id="chatStatus">Conectado</div>
+        </div>
+
+        <div class="chat-body">
+          <div class="chat-messages" id="chatMessages" aria-live="polite">
+            <div class="message-row bot">
+              <div class="message-bubble">
+                Hola. Soy el asistente IA de la Feria Digital conectado a Firebase AI Logic.
+                <br><br>
+                Puedes escribirme sobre:
+                <br>• productos agrícolas
+                <br>• recetas con café, maíz o plátano
+                <br>• galería
+                <br>• logros escolares
+                <br>• contacto
+              </div>
+            </div>
+          </div>
+
+          <div class="quick-actions">
+            <button class="quick-btn" type="button" data-message="Cuéntame sobre los productos agrícolas">Productos agrícolas</button>
+            <button class="quick-btn" type="button" data-message="Dame una receta bien especificada con café orgánico">Receta de café</button>
+            <button class="quick-btn" type="button" data-message="Dame una receta bien especificada con maíz criollo">Receta de maíz</button>
+            <button class="quick-btn" type="button" data-message="Muéstrame información sobre la galería">Galería</button>
+            <button class="quick-btn" type="button" data-message="Qué logros escolares tiene la comunidad">Logros escolares</button>
+            <button class="quick-btn" type="button" data-message="Cómo puedo contactar a la comunidad">Contacto</button>
+          </div>
+
+          <div class="chat-input-area">
+            <form class="chat-form" id="chatForm">
+              <div class="chat-input-wrap">
+                <label for="chatInput" class="chat-label">Escribe tu mensaje</label>
+                <textarea
+                  id="chatInput"
+                  class="chat-textarea"
+                  placeholder="Escribe aquí tu pregunta..."
+                ></textarea>
+              </div>
+
+              <div class="chat-buttons">
+                <button type="submit" class="chat-btn send">Enviar</button>
+                <button type="button" class="chat-btn clear" id="clearChat">Limpiar chat</button>
+              </div>
+            </form>
+
+            <p class="chat-hint">
+              Presiona Enter para enviar. Usa Shift + Enter si deseas hacer un salto de línea.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="main-footer">
+    <p>Feria Digital - Vereda El Progreso © 2026</p>
+    <p style="margin-top:0.8rem; opacity:0.9;">
+      Proyecto educativo comunitario - Desarrollado con cariño por y para la comunidad
+    </p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+    import { getAI, getGenerativeModel, GoogleAIBackend } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-ai.js";
+
+    // Usa la misma configuración de Firebase que el resto del proyecto.
+    const firebaseConfig = {
+      apiKey: "AIzaSyAmEH-RAY_Hq6VLfF9fnYS5z3mKe2dx0yo",
+      authDomain: "feria-digital-d2a98.firebaseapp.com",
+      projectId: "feria-digital-d2a98",
+      storageBucket: "feria-digital-d2a98.appspot.com",
+      messagingSenderId: "902434509262",
+      appId: "1:902434509262:web:dd75664ca494bf5651db9f"
+    };
+
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+    const clearChat = document.getElementById('clearChat');
+    const quickButtons = document.querySelectorAll('.quick-btn');
+    const chatStatus = document.getElementById('chatStatus');
+    const sendButton = chatForm?.querySelector('.chat-btn.send');
+    const isLocalFile = window.location.protocol === 'file:';
+
+    const welcomeMessage = 'Hola. Soy el asistente IA de la Feria Digital conectado a Firebase AI Logic. Puedes escribirme sobre productos agrícolas, recetas, galería, logros escolares o contacto.';
+    const connectionErrorMessage = 'No pude conectar Firebase AI Logic. Revisa que el proyecto esté configurado, que Gemini esté activo y que App Check no bloquee la app.';
+    const systemInstructionText = [
+      'Eres el asistente IA de la Feria Digital de la Vereda El Progreso.',
+      'Responde siempre en español, con tono amable, claro y útil.',
+      'Tu objetivo es ayudar a la gente a conocer los productos de la feria y a cocinar con ellos.',
+      'Usa como base la información de este proyecto:',
+      'Productos principales: café orgánico, maíz criollo, aguacate, mango y plátano.',
+      'Café orgánico: cultivado por familias de la vereda, con secado natural al sol. Explica cómo prepararlo y sugiere bebidas o postres con café.',
+      'Maíz criollo: variedad tradicional, base de la alimentación local. Sirve para arepas, mazamorra, envueltos, tamales y bebidas tradicionales.',
+      'Aguacate: producto fresco y nutritivo. Sugiere guacamoles, ensaladas, tostadas y acompañamientos.',
+      'Mango: fruta dulce y aromática. Sugiere jugos, batidos, postres, ensaladas y mermeladas.',
+      'Plátano: ideal para patacones, tajadas, maduro, tortas y acompañamientos salados.',
+      'Registro e inicio de sesión: hay un botón "Iniciar sesión" y una opción para registrarse en la página principal.',
+      'Contacto: existe un formulario para nombre, celular, correo y mensaje.',
+      'Logros escolares: feria científica rural, sitio web comunitario y proyectos sobre agricultura sostenible y cuidado del agua.',
+      'Cuando el usuario pida información de un producto, da una explicación más amplia: qué es, para qué sirve, cómo se usa, con qué se combina y una sugerencia práctica.',
+      'Cuando el usuario pida una receta, responde con una receta bien especificada y estructurada con este formato:',
+      'Título de la receta.',
+      'Rinde o porciones.',
+      'Tiempo de preparación y tiempo de cocción.',
+      'Ingredientes con cantidades claras.',
+      'Preparación paso a paso numerada.',
+      'Consejos o variaciones al final.',
+      'Si el usuario pide una receta de café, puedes proponer bebidas, postres o preparaciones con café orgánico, y ser específico con ingredientes y pasos.',
+      'Nunca respondas que no tienes recetas si el usuario pide cocinar con los productos de la feria. En su lugar, crea una propuesta culinaria útil y concreta.',
+      'Puedes combinar los productos de la feria con ingredientes comunes de cocina como agua, leche, azúcar, sal, aceite, harina, queso, canela, limón o huevo, siempre que eso ayude a explicar mejor la receta.',
+      'No uses markdown, negritas ni asteriscos. Escribe todo en texto plano con etiquetas claras como Título, Rinde, Tiempo de preparación, Tiempo de cocción, Ingredientes, Preparación y Consejos.',
+      'No inventes datos históricos ni afirmaciones externas sobre la comunidad.',
+      'Si no sabes algo, invita a volver a la página principal o a usar el formulario de contacto.',
+      'Si el usuario pide recetas o detalles de productos, sé más extenso de lo normal y prioriza la utilidad.'
+    ].join(' ');
+    const systemInstruction = {
+      role: 'system',
+      parts: [{ text: systemInstructionText }]
+    };
+
+    let model = null;
+    let chatSession = null;
+    let isSending = false;
+
+    try {
+      const firebaseApp = initializeApp(firebaseConfig);
+      const ai = getAI(firebaseApp, { backend: new GoogleAIBackend() });
+      model = getGenerativeModel(ai, {
+        model: 'gemini-2.5-flash-lite',
+        systemInstruction
+      });
+    } catch (error) {
+      console.error('Firebase AI Logic initialization error:', error);
+    }
+
+    function setStatus(text) {
+      if (chatStatus) {
+        chatStatus.textContent = text;
+      }
+    }
+
+    function formatAssistantText(text) {
+      return String(text)
+        .replace(/\r\n/g, '\n')
+        .replace(/^\s*[*-]\s+/gm, '• ')
+        .replace(/^#{1,6}\s+/gm, '')
+        .replace(/\*\*(.*?)\*\*/g, '$1')
+        .replace(/\*/g, '')
+        .replace(/[ \t]+\n/g, '\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+    }
+
+    function isIntroBoilerplate(line) {
+      return /^(aquí tienes|aqui tienes|te comparto|te dejo|claro|por supuesto|con gusto|genial|perfecto|a continuación|a continuacion)/i.test(line);
+    }
+
+    function stripListMarker(line) {
+      return line.replace(/^(?:•|-|\d+[.)])\s+/, '').trim();
+    }
+
+    function isBulletLine(line) {
+      return /^(•|-)\s+/.test(line);
+    }
+
+    function isNumberedLine(line) {
+      return /^\d+[.)]\s+/.test(line);
+    }
+
+    function isRecipeLike(lines) {
+      const joined = lines.join(' ').toLowerCase();
+      const keywords = [
+        'ingredientes',
+        'preparacion',
+        'preparación',
+        'rinde',
+        'porciones',
+        'tiempo de preparación',
+        'tiempo de cocción',
+        'consejos',
+        'variaciones'
+      ];
+      const hits = keywords.reduce((count, keyword) => count + (joined.includes(keyword) ? 1 : 0), 0);
+      return hits >= 2 || (joined.includes('ingredientes') && (joined.includes('preparacion') || joined.includes('rinde') || joined.includes('porciones')));
+    }
+
+    function createTextElement(tagName, text, className = '') {
+      const element = document.createElement(tagName);
+      if (className) {
+        element.className = className;
+      }
+      element.textContent = text;
+      return element;
+    }
+
+    function createListElement(items, ordered = false) {
+      const list = document.createElement(ordered ? 'ol' : 'ul');
+      list.className = 'recipe-list';
+
+      items.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        list.appendChild(li);
+      });
+
+      return list;
+    }
+
+    function renderPlainAssistantContent(lines) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'assistant-content recipe-plain';
+
+      let paragraphBuffer = [];
+      let activeList = null;
+      let activeListType = null;
+
+      function flushParagraph() {
+        if (!paragraphBuffer.length) {
+          return;
+        }
+
+        const paragraph = document.createElement('p');
+        paragraph.textContent = paragraphBuffer.join(' ');
+        wrapper.appendChild(paragraph);
+        paragraphBuffer = [];
+      }
+
+      function flushList() {
+        if (!activeList) {
+          return;
+        }
+
+        wrapper.appendChild(activeList);
+        activeList = null;
+        activeListType = null;
+      }
+
+      function ensureList(ordered) {
+        const nextType = ordered ? 'ol' : 'ul';
+
+        if (activeList && activeListType !== nextType) {
+          flushList();
+        }
+
+        if (!activeList) {
+          activeList = document.createElement(nextType);
+          activeList.className = 'recipe-list';
+          activeListType = nextType;
+        }
+      }
+
+      for (const line of lines) {
+        if (isBulletLine(line)) {
+          flushParagraph();
+          ensureList(false);
+          const li = document.createElement('li');
+          li.textContent = stripListMarker(line);
+          activeList.appendChild(li);
+          continue;
+        }
+
+        if (isNumberedLine(line)) {
+          flushParagraph();
+          ensureList(true);
+          const li = document.createElement('li');
+          li.textContent = stripListMarker(line);
+          activeList.appendChild(li);
+          continue;
+        }
+
+        const labelMatch = line.match(/^([^:]{2,40}):\s*(.+)$/);
+        if (labelMatch && !/^https?:\/\//i.test(labelMatch[2])) {
+          flushParagraph();
+          flushList();
+          const paragraph = document.createElement('p');
+          const strong = document.createElement('strong');
+          strong.textContent = `${labelMatch[1].trim()}: `;
+          paragraph.appendChild(strong);
+          paragraph.appendChild(document.createTextNode(labelMatch[2].trim()));
+          wrapper.appendChild(paragraph);
+          continue;
+        }
+
+        flushList();
+        paragraphBuffer.push(line);
+      }
+
+      flushParagraph();
+      flushList();
+
+      return wrapper;
+    }
+
+    function renderRecipeAssistantContent(lines) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'assistant-content recipe-card';
+
+      let title = '';
+      const intro = [];
+      const meta = [];
+      const ingredients = [];
+      const steps = [];
+      const tips = [];
+      let currentSection = 'intro';
+
+      const metaMatchers = [
+        { label: 'Rinde', regex: /^(rinde|porciones?)\s*[:\-]?\s*(.+)$/i },
+        { label: 'Tiempo de preparación', regex: /^(tiempo de preparaci[oó]n)\s*[:\-]?\s*(.+)$/i },
+        { label: 'Tiempo de cocción', regex: /^(tiempo de cocci[oó]n)\s*[:\-]?\s*(.+)$/i }
+      ];
+
+      const sectionMatchers = [
+        { key: 'ingredients', regex: /^ingredientes?\s*[:\-]?\s*(.*)$/i },
+        { key: 'steps', regex: /^(preparaci[oó]n|pasos?)\s*[:\-]?\s*(.*)$/i },
+        { key: 'tips', regex: /^(consejos?|variaciones?)\s*[:\-]?\s*(.*)$/i }
+      ];
+
+      for (const line of lines) {
+        if (isIntroBoilerplate(line) && !title) {
+          continue;
+        }
+
+        let matched = false;
+        const normalizedLine = line.replace(/^\s*#+\s*/, '');
+
+        for (const metaMatcher of metaMatchers) {
+          const match = normalizedLine.match(metaMatcher.regex);
+          if (match) {
+            meta.push({ label: metaMatcher.label, value: match[2].trim() });
+            currentSection = 'meta';
+            matched = true;
+            break;
+          }
+        }
+
+        if (matched) {
+          continue;
+        }
+
+        for (const sectionMatcher of sectionMatchers) {
+          const match = normalizedLine.match(sectionMatcher.regex);
+          if (match) {
+            currentSection = sectionMatcher.key;
+            const extra = match[2]?.trim();
+
+            if (extra) {
+              if (sectionMatcher.key === 'ingredients') {
+                ingredients.push(extra);
+              } else if (sectionMatcher.key === 'steps') {
+                steps.push(extra);
+              } else if (sectionMatcher.key === 'tips') {
+                tips.push(extra);
+              }
+            }
+
+            matched = true;
+            break;
+          }
+        }
+
+        if (matched) {
+          continue;
+        }
+
+        const cleanLine = stripListMarker(normalizedLine);
+
+        if (!title && currentSection === 'intro' && cleanLine && !isIntroBoilerplate(cleanLine)) {
+          title = cleanLine;
+          continue;
+        }
+
+        if (currentSection === 'ingredients') {
+          ingredients.push(cleanLine);
+          continue;
+        }
+
+        if (currentSection === 'steps') {
+          steps.push(cleanLine);
+          continue;
+        }
+
+        if (currentSection === 'tips') {
+          tips.push(cleanLine);
+          continue;
+        }
+
+        if (!isIntroBoilerplate(cleanLine)) {
+          intro.push(cleanLine);
+        }
+      }
+
+      if (!title) {
+        title = 'Receta sugerida';
+      }
+
+      wrapper.appendChild(createTextElement('h3', title, 'recipe-title'));
+
+      if (intro.length) {
+        wrapper.appendChild(createTextElement('p', intro.join(' '), 'recipe-intro'));
+      }
+
+      if (meta.length) {
+        const metaGrid = document.createElement('div');
+        metaGrid.className = 'recipe-meta-grid';
+
+        meta.forEach((item) => {
+          const metaItem = document.createElement('div');
+          metaItem.className = 'recipe-meta-item';
+
+          const label = document.createElement('span');
+          label.className = 'recipe-meta-label';
+          label.textContent = item.label;
+
+          const value = document.createElement('span');
+          value.className = 'recipe-meta-value';
+          value.textContent = item.value;
+
+          metaItem.appendChild(label);
+          metaItem.appendChild(value);
+          metaGrid.appendChild(metaItem);
+        });
+
+        wrapper.appendChild(metaGrid);
+      }
+
+      if (ingredients.length) {
+        const section = document.createElement('section');
+        section.className = 'recipe-section';
+        section.appendChild(createTextElement('h4', 'Ingredientes'));
+        section.appendChild(createListElement(ingredients));
+        wrapper.appendChild(section);
+      }
+
+      if (steps.length) {
+        const section = document.createElement('section');
+        section.className = 'recipe-section';
+        section.appendChild(createTextElement('h4', 'Preparación'));
+        section.appendChild(createListElement(steps, true));
+        wrapper.appendChild(section);
+      }
+
+      if (tips.length) {
+        const section = document.createElement('section');
+        section.className = 'recipe-section';
+        section.appendChild(createTextElement('h4', 'Consejos'));
+        section.appendChild(createListElement(tips));
+        wrapper.appendChild(section);
+      }
+
+      return wrapper;
+    }
+
+    function renderAssistantContent(text) {
+      const lines = formatAssistantText(text)
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean);
+
+      if (!lines.length) {
+        return createTextElement('p', '');
+      }
+
+      return isRecipeLike(lines)
+        ? renderRecipeAssistantContent(lines)
+        : renderPlainAssistantContent(lines);
+    }
+
+    function describeAiError(error) {
+      const code = String(error?.code ?? error?.status ?? '').trim();
+      const message = String(error?.message ?? error ?? '').trim();
+      const lowerMessage = message.toLowerCase();
+
+      if (isLocalFile) {
+        return 'Estás abriendo la página como archivo local. Para Firebase AI Logic usa Live Server o Firebase Hosting con http://localhost o https.';
+      }
+
+      if (
+        code === 'permission-denied' ||
+        lowerMessage.includes('permission_denied') ||
+        lowerMessage.includes('does not have permission') ||
+        lowerMessage.includes('403')
+      ) {
+        return 'La clave API o el proyecto de Firebase no coinciden. Verifica que `firebaseConfig` sea del mismo proyecto donde activaste AI Logic y Gemini.';
+      }
+
+      if (
+        lowerMessage.includes('genai config not found') ||
+        lowerMessage.includes('not configured') ||
+        lowerMessage.includes('404')
+      ) {
+        return 'AI Logic o Gemini no quedó habilitado en Firebase Console. Revisa AI Logic, vuelve a completar Get started y guarda la configuración del proveedor.';
+      }
+
+      if (
+        lowerMessage.includes('app check') ||
+        lowerMessage.includes('appcheck') ||
+        lowerMessage.includes('recaptcha')
+      ) {
+        return 'App Check está bloqueando la llamada. Para probar, configura App Check en modo debug o revisa reCAPTCHA Enterprise en Firebase Console.';
+      }
+
+      if (lowerMessage.includes('quota') || lowerMessage.includes('429')) {
+        return 'Se alcanzó la cuota del modelo. Revisa el plan o la facturación, o espera a que se restablezca la cuota.';
+      }
+
+      return `No se pudo conectar a Firebase AI Logic.${code ? ` Código: ${code}.` : ''}${message ? ` Detalle: ${message}` : ''}`;
+    }
+
+    function setInteractiveState(disabled) {
+      if (chatInput) chatInput.disabled = disabled;
+      if (sendButton) sendButton.disabled = disabled;
+      if (clearChat) clearChat.disabled = disabled;
+      quickButtons.forEach((button) => {
+        button.disabled = disabled;
+      });
+    }
+
+    function addMessage(text, sender = 'bot') {
+      const row = document.createElement('div');
+      row.className = `message-row ${sender}`;
+
+      const bubble = document.createElement('div');
+      bubble.className = 'message-bubble';
+      if (sender === 'bot') {
+        bubble.classList.add('assistant-bubble');
+        bubble.appendChild(renderAssistantContent(text));
+      } else {
+        bubble.textContent = text;
+      }
+
+      row.appendChild(bubble);
+      chatMessages.appendChild(row);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function addTypingIndicator() {
+      const row = document.createElement('div');
+      row.className = 'message-row bot';
+      row.id = 'typingIndicator';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'message-bubble';
+      bubble.innerHTML = `
+        <div class="typing" aria-label="Escribiendo">
+          <span></span><span></span><span></span>
+        </div>
+      `;
+
+      row.appendChild(bubble);
+      chatMessages.appendChild(row);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      document.getElementById('typingIndicator')?.remove();
+    }
+
+    function createChatSession() {
+      if (!model) {
+        throw new Error('Firebase AI Logic no está inicializado');
+      }
+
+      return model.startChat();
+    }
+
+    function resetConversation() {
+      chatMessages.innerHTML = '';
+
+      try {
+        chatSession = createChatSession();
+        setStatus('Conectado');
+        addMessage(welcomeMessage, 'bot');
+        if (isLocalFile) {
+          addMessage('Nota: esta página está abierta como archivo local. Si ves errores, ábrela con Live Server o Firebase Hosting.', 'bot');
+        }
+      } catch (error) {
+        console.error('Firebase AI Logic chat error:', error);
+        chatSession = null;
+        setStatus('Error');
+        addMessage(describeAiError(error) || connectionErrorMessage, 'bot');
+      }
+    }
+
+    async function sendMessage(customText = null) {
+      if (isSending) {
+        return;
+      }
+
+      const message = (customText ?? chatInput.value).trim();
+      if (!message) {
+        return;
+      }
+
+      if (!chatSession) {
+        addMessage(connectionErrorMessage, 'bot');
+        setStatus('Error');
+        return;
+      }
+
+      addMessage(message, 'user');
+      chatInput.value = '';
+      isSending = true;
+      setInteractiveState(true);
+      setStatus('Escribiendo');
+      addTypingIndicator();
+
+      try {
+        const result = await chatSession.sendMessage(message);
+        let reply = '';
+        let replyHadError = false;
+
+        try {
+          reply = result.response.text().trim();
+        } catch (textError) {
+          console.error('Firebase AI Logic response text error:', textError);
+          reply = describeAiError(textError);
+          replyHadError = true;
+        }
+
+        removeTypingIndicator();
+        addMessage(reply || 'Firebase AI Logic respondió sin texto.', 'bot');
+        setStatus(replyHadError ? 'Error' : 'Conectado');
+      } catch (error) {
+        console.error('Firebase AI Logic message error:', error);
+        removeTypingIndicator();
+        addMessage(describeAiError(error), 'bot');
+        setStatus('Error');
+      } finally {
+        isSending = false;
+        setInteractiveState(false);
+        chatInput.focus();
+      }
+    }
+
+    chatForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      sendMessage();
+    });
+
+    chatInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    clearChat.addEventListener('click', () => {
+      resetConversation();
+      chatInput.value = '';
+      chatInput.focus();
+    });
+
+    quickButtons.forEach((button) => {
+      button.addEventListener('click', function () {
+        sendMessage(this.getAttribute('data-message'));
+      });
+    });
+
+    resetConversation();
+    setInteractiveState(false);
+  </script>
+
+</body>
+</html>

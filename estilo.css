@@ -142,6 +142,13 @@ textarea {
   padding: 0;
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
 .nav-link {
   text-decoration: none;
   font-weight: 700;
@@ -412,11 +419,17 @@ textarea {
     gap: 0.85rem;
   }
 
+  .nav-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
   .auth-actions,
   .card-actions {
     flex-direction: column;
   }
 
+  .nav-actions .btn,
   .auth-actions .btn,
   .card-actions .btn,
   .contact-form .btn {
